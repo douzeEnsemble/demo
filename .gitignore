@@ -1,0 +1,12 @@
+node_modules
+dist
+.wrangler
+.vite
+*.local
+.DS_Store
+.env
+coverage
+playwright-report
+test-results
+.stryker-tmp
+mutation-report
