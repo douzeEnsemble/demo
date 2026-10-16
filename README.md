@@ -57,9 +57,8 @@ données d'origine de la graine.
 - [Vite](https://vite.dev/) + TypeScript, sans framework front (DOM direct,
   gabarits HTML en template literals) pour rester léger — mêmes conventions
   que KoiKiManke, DansMaHotte et OnMangeQuoi.
-- Aucun code serveur : l'app est un site statique, servi par
-  [Cloudflare Workers](https://developers.cloudflare.com/workers/static-assets/)
-  (assets statiques uniquement) et par GitHub Pages.
+- Aucun code serveur : l'app est un site statique, hébergé sur
+  [GitHub Pages](https://pages.github.com/).
 
 ## Démarrer en local
 
@@ -72,15 +71,11 @@ Ouvre l'URL affichée (`http://localhost:5173` par défaut).
 
 ## Déployer
 
-- **Cloudflare** : `npm run deploy` (build puis `wrangler deploy`, nécessite
-  `npx wrangler login` la première fois). En CI, `.github/workflows/deploy.yml`
-  le fait après chaque CI verte sur `main` (secrets `CLOUDFLARE_API_TOKEN` et
-  `CLOUDFLARE_ACCOUNT_ID`, variable optionnelle `DEPLOY_URL` pour la
-  vérification post-déploiement).
-- **GitHub Pages** : `.github/workflows/pages.yml`, après chaque CI verte sur
-  `main`, une fois Pages activé (Settings → Pages → Source : « GitHub
-  Actions »). L'app y est servie sous `/<nom-du-dépôt>/` (voir
-  `VITE_BASE_PATH`).
+`.github/workflows/pages.yml` publie l'app sur GitHub Pages après chaque CI
+verte sur `main`. Une seule étape manuelle, la première fois : activer Pages
+dans Settings → Pages → Source : « GitHub Actions ». L'app est servie sous
+`/<nom-du-dépôt>/` (voir `VITE_BASE_PATH`), et `404.html` (copie
+d'`index.html`) permet d'ouvrir directement un lien comme `/demo/roue?seed=…`.
 
 ## Ajouter une démo
 
@@ -104,7 +99,6 @@ src/components/     En-tête commun des démos, préférences, modale accessibil
 src/lib/            Générateur à graine, réservoirs communs (personnes…),
                     formats (dates, montants), thème, accessibilité…
 e2e/                Tests fonctionnels Playwright
-wrangler.json       Configuration Cloudflare (assets statiques, repli SPA)
 ```
 
 ## Qualité et CI/CD
@@ -119,6 +113,6 @@ npm run test:e2e      # Playwright, contre `vite dev`
 ```
 
 `.github/workflows/` : `ci.yml` (lint, typecheck, tests + couverture,
-mutation testing, e2e, audit, build), `deploy.yml` (Cloudflare) et `pages.yml`
-(GitHub Pages), tous deux gatés sur la réussite de la CI via `workflow_run`.
+mutation testing, e2e, audit, build) et `pages.yml` (GitHub Pages, gaté sur
+la réussite de la CI via `workflow_run`).
 Dependabot et CodeQL sont aussi configurés.

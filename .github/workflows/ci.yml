@@ -117,8 +117,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      # Pas un vrai déploiement de preview (ça demanderait un hébergeur
-      # tiers en plus de Cloudflare + un nouveau secret) : juste de quoi
+      # Pas un vrai déploiement de preview (GitHub Pages ne sert qu'une
+      # version à la fois) : juste de quoi
       # télécharger et lancer le build en local pour relire une PR sans
       # attendre le merge.
       - if: github.event_name == 'pull_request'

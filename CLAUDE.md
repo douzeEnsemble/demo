@@ -17,7 +17,6 @@ npm run test:mutation  # stryker run — mutation testing sur la seule logique p
 npm run test:e2e       # playwright test — démarre lui-même `vite dev` (voir playwright.config.ts)
 npm run build          # npm run typecheck && vite build (sortie : dist/)
 npm run preview        # vite preview
-npm run deploy         # npm run build && wrangler deploy (nécessite `npx wrangler login` au préalable)
 ```
 
 Lancer un seul test ou fichier :
@@ -32,7 +31,7 @@ Avant de pousser : lint, typecheck, test:coverage, test:mutation et test:e2e —
 
 ## Architecture
 
-Vitrine de petites applications de démonstration : un accueil qui liste les démos, puis la démo choisie. Mêmes conventions que KoiKiManke / DansMaHotte / OnMangeQuoi (TypeScript strict, Vite, pas de framework front, oxlint, Vitest 100%, Stryker, Playwright, déploiement Cloudflare + GitHub Pages gaté sur la CI), **sans Worker ni Durable Object** : toutes les données sont générées côté client, Cloudflare ne sert que les assets statiques (`wrangler.json`, `assets.not_found_handling: "single-page-application"`). D'où l'absence de `@cloudflare/vite-plugin`, de `worker/`, de `shared/` et d'un second tsconfig.
+Vitrine de petites applications de démonstration : un accueil qui liste les démos, puis la démo choisie. Mêmes conventions que KoiKiManke / DansMaHotte / OnMangeQuoi (TypeScript strict, Vite, pas de framework front, oxlint, Vitest 100%, Stryker, Playwright, déploiement gaté sur la CI), **sans Worker ni Durable Object** : toutes les données sont générées côté client, l'app est un site statique hébergé uniquement sur GitHub Pages (pas de Cloudflare). D'où l'absence de `@cloudflare/vite-plugin`, de `wrangler`, de `worker/`, de `shared/` et d'un second tsconfig. Si une démo a un jour besoin d'un vrai serveur (données partagées entre visiteurs), c'est à ce moment-là qu'il faudra réintroduire un Worker Cloudflare comme dans les autres projets.
 
 ### Données fictives à graine
 
@@ -58,7 +57,7 @@ Thème (`src/lib/theme.ts`) et accessibilité (`src/lib/accessibilityPreference.
 ### CI/CD
 
 - `ci.yml` : lint, typecheck, tests + couverture, e2e, audit, mutation testing ; `build` dépend des quatre premiers. Sur une PR, `dist/` est uploadé comme artefact de prévisualisation.
-- `deploy.yml` (Cloudflare, `wrangler deploy` des assets de `dist/`) et `pages.yml` (GitHub Pages, `VITE_BASE_PATH=/<dépôt>/`, `404.html` = copie d'`index.html` pour le repli SPA) se déclenchent via `workflow_run` après une CI verte sur `main`. `deploy.yml` vérifie ensuite que `/` et `/roue?seed=…` répondent 200 (si `vars.DEPLOY_URL` est défini) et pose un tag `deploy-N`.
+- `pages.yml` (GitHub Pages, `VITE_BASE_PATH=/<dépôt>/`, `404.html` = copie d'`index.html` pour le repli SPA : ouvrir directement `/roue?seed=…` sert l'app) se déclenche via `workflow_run` après une CI verte sur `main`, jamais sur un simple push.
 - `codeql.yml` sur push/PR vers `main` et chaque semaine.
 
 ### Tests

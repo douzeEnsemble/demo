@@ -38,7 +38,7 @@ export default {
     "src/lib/format.ts",
     "src/apps/*/generator.ts",
   ],
-  ignorePatterns: ["dist", "coverage", "mutation-report", "playwright-report", "test-results", ".wrangler"],
+  ignorePatterns: ["dist", "coverage", "mutation-report", "playwright-report", "test-results"],
   thresholds: {
     high: 95,
     low: 85,

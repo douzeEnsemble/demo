@@ -1,8 +1,9 @@
 name: Déploiement GitHub Pages
 
 on:
-  # Comme deploy.yml : se déclenche après un CI réussi sur main, jamais sur
-  # un commit dont lint/typecheck/tests/build ont échoué.
+  # Se déclenche après un CI réussi sur main plutôt que sur push : garantit
+  # qu'on ne déploie jamais un commit dont lint/typecheck/tests/build ont
+  # échoué, y compris en cas de push direct sur main.
   workflow_run:
     workflows: [CI]
     types: [completed]
@@ -42,8 +43,7 @@ jobs:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/
         run: npm run build
       - name: Fallback SPA (routes /roue, /stock… rechargées ou ouvertes directement)
-        # GitHub Pages n'a pas d'équivalent au `not_found_handling:
-        # single-page-application` de Cloudflare : sans ceci, ouvrir ou
+        # GitHub Pages ne connaît pas les routes de l'app : sans ceci, ouvrir ou
         # recharger un lien partagé donnerait un 404 au lieu de servir l'app,
         # qui route elle-même via location.pathname une fois chargée.
         run: cp dist/index.html dist/404.html

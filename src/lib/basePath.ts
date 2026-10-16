@@ -1,6 +1,6 @@
-// Sur Cloudflare Workers, l'app est servie à la racine du domaine (base
-// "/"). Sur GitHub Pages (dépôt de projet, pas un dépôt <user>.github.io),
-// elle est servie sous un sous-chemin (ex: "/demo/", voir `base` dans
+// En local (`npm run dev`), l'app est servie à la racine (base "/"). Sur
+// GitHub Pages (dépôt de projet, pas un dépôt <user>.github.io), elle est
+// servie sous un sous-chemin (ex: "/demo/", voir `base` dans
 // vite.config.ts et VITE_BASE_PATH dans .github/workflows/pages.yml) :
 // import.meta.env.BASE_URL reflète ce sous-chemin (toujours terminé par
 // "/"), et ces deux fonctions gardent le routeur et les liens
